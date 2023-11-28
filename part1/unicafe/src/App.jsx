@@ -47,12 +47,7 @@ const App = () => {
 
       <Label text="Statistics"/>
 
-      <p>Good: {Good}</p>
-      <p>Neutral: {Neutral}</p>
-      <p>Bad: {Bad}</p>
-      <p>All: {All}</p>
-      <Average Good={Good} Neutral={Neutral} Bad={Bad} All={All} />
-      <Positive Good={Good} All={All} />
+      <Statistics Good={Good} Neutral={Neutral} Bad={Bad} All={All} />
     </div>
   )
 }
@@ -70,6 +65,22 @@ const Label = (props) => {
     <h1>{props.text}</h1>
   )
 }
+
+const Statistics = (props) => {
+  const { Good, Neutral, Bad, All } = props
+  
+  return(
+    <div>
+      <p>Good: {Good}</p>
+      <p>Neutral: {Neutral}</p>
+      <p>Bad: {Bad}</p>
+      <p>All: {All}</p>
+      <Average Good={Good} Neutral={Neutral} Bad={Bad} All={All} />
+      <Positive Good={Good} All={All} />
+    </div>
+  )
+}
+   
 
 const Average = ({ Good, Neutral, Bad, All }) => {
 
