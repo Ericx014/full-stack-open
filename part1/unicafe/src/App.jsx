@@ -15,7 +15,12 @@ const Button = (props) => {
 }
 
 const StatisticLine = ({text, value, unit}) => {
-  return ( <p>{text}: {value}{unit}</p> )
+  return ( 
+    <tr>
+      <td>{text}: </td>
+      <td>{value}{unit}</td>
+    </tr>
+  )
 } 
 
 const Statistics = (props) => {
@@ -31,12 +36,16 @@ const Statistics = (props) => {
   else {
     return(
       <div>
-        <StatisticLine text="Good" value={Good} />
-        <StatisticLine text="Neutral" value={Neutral} />
-        <StatisticLine text="Bad" value={Bad} />
-        <StatisticLine text="All" value={All} />
-        <StatisticLine text="Average" value={Average} />
-        <StatisticLine text="Positive" value={Positive} unit={"%"}/>
+        <table>
+          <tbody>
+            <StatisticLine text="Good" value={Good} />
+            <StatisticLine text="Neutral" value={Neutral} />
+            <StatisticLine text="Bad" value={Bad} />
+            <StatisticLine text="All" value={All} />
+            <StatisticLine text="Average" value={Average} />
+            <StatisticLine text="Positive" value={Positive} unit={"%"}/>
+          </tbody>
+        </table>
       </div>
     )
   }
