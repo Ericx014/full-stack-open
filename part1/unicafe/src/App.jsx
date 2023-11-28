@@ -1,5 +1,47 @@
 import { useState } from 'react'
 
+const Label = (props) => {
+  return (
+    <h1>{props.text}</h1>
+  )
+}
+
+const Button = (props) => {
+  return (
+    <button onClick={props.handleClick}>
+      {props.text}
+    </button>
+  )
+}
+
+const StatisticLine = ({text, value, unit}) => {
+  return ( <p>{text}: {value}{unit}</p> )
+} 
+
+const Statistics = (props) => {
+  const { Good, Neutral, Bad, All } = props
+  const Average = ((Good * 1) + (Neutral * 0) + (Bad * -1)) / All
+  const Positive = (Good / All) * 100 
+  
+  if (All === 0) {
+    return (
+      <p>No feedback given</p>
+    )
+  } 
+  else {
+    return(
+      <div>
+        <StatisticLine text="Good" value={Good} />
+        <StatisticLine text="Neutral" value={Neutral} />
+        <StatisticLine text="Bad" value={Bad} />
+        <StatisticLine text="All" value={All} />
+        <StatisticLine text="Average" value={Average} />
+        <StatisticLine text="Positive" value={Positive} unit={"%"}/>
+      </div>
+    )
+  }
+}
+
 const App = () => {
   
   const [Good, setGood] = useState(0)
@@ -50,70 +92,6 @@ const App = () => {
       <Statistics Good={Good} Neutral={Neutral} Bad={Bad} All={All} />
     </div>
   )
-}
-
-const Button = (props) => {
-  return (
-    <button onClick={props.handleClick}>
-      {props.text}
-    </button>
-  )
-}
-
-const Label = (props) => {
-  return (
-    <h1>{props.text}</h1>
-  )
-}
-
-const Statistics = (props) => {
-  const { Good, Neutral, Bad, All } = props
-  
-  return(
-    <div>
-      <p>Good: {Good}</p>
-      <p>Neutral: {Neutral}</p>
-      <p>Bad: {Bad}</p>
-      <p>All: {All}</p>
-      <Average Good={Good} Neutral={Neutral} Bad={Bad} All={All} />
-      <Positive Good={Good} All={All} />
-    </div>
-  )
-}
-   
-
-const Average = ({ Good, Neutral, Bad, All }) => {
-
-  if ((Good == 0) && (Bad == 0) && (Neutral == 0)){
-    return(
-      <p>Average: 0</p>
-    )
-  } 
-  else {
-     return (
-      <p>
-        Average: { ((Good * 1) + (Neutral * 0) + (Bad * -1)) / All }
-      </p>
-    ) 
-  }
-}
-
-const Positive = ({ Good, All }) => {
-  if (Good == 0 && All == 0) {
-    return (
-      <p>Positive: 0%</p>
-    )
-  } 
-  else if (Good !== 0 && ((All - Good) == 0)) {
-    return (
-      <p>Positive: 100%</p>
-    )
-  } 
-  else if (Good !== 0){
-    return (
-      <p>Positive: {(Good / All)*100}%</p>
-    )
-  }
 }
 
 export default App
