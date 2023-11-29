@@ -47,9 +47,7 @@ const App = () => {
   ]
 
   return (
-    <div>
       <Course courses={courses} />
-    </div>
   )
 }
 
