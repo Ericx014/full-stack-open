@@ -1,50 +1,75 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import contactServices from '../services/note'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
-
   const [newName, setNewName] = useState('Eric Bong')
   const [newNumber, setNewNumber] = useState('011-33472177')
-  const [filter, setNewFilter] = useState('')
+  const [filter, setFilter] = useState('')
 
-  const hook = () => {
-    console.log("effect")
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promised fullfiled')
-        setPersons(response.data)
-      })
-  }
-
-  useEffect(hook, [])
+  useEffect(() => {
+    contactServices.getAllContact()
+      .then(initialPersons => setPersons(initialPersons))
+  } ,[])
 
   const addNewContact = (event) => {
     event.preventDefault()
 
-    const existingPerson = persons.some((person) =>
+    const existingPerson = persons.find((person) =>
       person.name.toLowerCase() === newName.toLowerCase()
     )
     console.log("Existing person:", existingPerson)
 
     if (existingPerson) {
-      window.alert(`${newName}'s contact is already saved`)
+      window.confirm(
+        `${newName}'s contact is already saved, would you like to replace the current information?`
+      )
+      
+      const updatedPerson = {
+        ...existingPerson, number: newNumber
+      }
+
+      contactServices
+        .updateContact(existingPerson.id, updatedPerson)
+        .then((returnedData) => {
+          setPersons(
+            persons.map((person) => 
+              person.id !== existingPerson.id ? person: returnedData)
+          )
+          console.log("Contact updated", returnedData)
+        })
+
     } else {
         const newPerson = {
           name: newName,
           number: newNumber,
           id: persons.length + 1
         }
-        const updatedArray = persons.concat(newPerson) 
-        setPersons(updatedArray)
-        setNewName('')
-        setNewNumber('')
-        console.log("New person added:", updatedArray)
+
+        contactServices.createContact(newPerson)
+        .then((returnedData) => {
+          setPersons(persons.concat(returnedData))
+          setNewName('')
+          setNewNumber('')
+          console.log("New person added:", returnedData)
+        })
       }
+  }
+
+  const deleteOnClick = (id) => {
+    const personToDelete = persons.find((person) => person.id === id);
+
+    if (window.confirm(`Delete ${personToDelete.name}'s contact?`)){
+      contactServices.deleteContact(id)
+        .then(() => {
+          const contactsAfterDelete = persons.filter((person) => person.id !== id)
+          setPersons(contactsAfterDelete)
+          console.log("Contact deleted", personToDelete)
+        })
+    }
   }
 
   const handleNameChange = (event) => {
@@ -59,7 +84,7 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     console.log("Filter change: ", event.target.value)
-    setNewFilter(event.target.value)
+    setFilter(event.target.value)
   }
 
   return (
@@ -78,8 +103,9 @@ const App = () => {
 
       <Persons 
         persons = {persons.filter((person) => 
-        person.name.toLowerCase().includes((filter).toLowerCase())
+          person.name.toLowerCase().includes((filter).toLowerCase())
         )}
+        deleteOnClick = {deleteOnClick}
       />
     </div>
   )
@@ -87,4 +113,3 @@ const App = () => {
 
 export default App
 
-// stopped at 2.10
