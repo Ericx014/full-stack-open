@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import contactServices from '../services/note'
+import contactServices from '../services/Person'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
-  const [newName, setNewName] = useState('Eric Bong')
-  const [newNumber, setNewNumber] = useState('011-33472177')
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
@@ -39,7 +39,10 @@ const App = () => {
             persons.map((person) => 
               person.id !== existingPerson.id ? person: returnedData)
           )
-          console.log("Contact updated", returnedData)
+          console.log("Previous data", existingPerson)
+          console.log("Updated data", returnedData)
+          setNewName('')
+          setNewNumber('')
         })
 
     } else {
