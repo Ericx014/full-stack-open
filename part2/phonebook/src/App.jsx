@@ -3,12 +3,15 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import contactServices from '../services/Person'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     contactServices.getAllContact()
@@ -21,7 +24,6 @@ const App = () => {
     const existingPerson = persons.find((person) =>
       person.name.toLowerCase() === newName.toLowerCase()
     )
-    console.log("Existing person:", existingPerson)
 
     if (existingPerson) {
       window.confirm(
@@ -43,7 +45,18 @@ const App = () => {
           console.log("Updated data", returnedData)
           setNewName('')
           setNewNumber('')
+          setMessage("Contact updated successfully.")
+          setTimeout(() => {
+            setMessage(null)
+          }, 4000)
         })
+        .catch(error => {
+          console.log(`Error: ${existingPerson.name} not found in saved contacts.`)
+          setErrorMessage(`${existingPerson.name} not found within contacts`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 4000)
+    })
 
     } else {
         const newPerson = {
@@ -58,6 +71,10 @@ const App = () => {
           setNewName('')
           setNewNumber('')
           console.log("New person added:", returnedData)
+          setMessage("Contact saved successfully")
+          setTimeout(() => {
+            setMessage(null)
+          }, 4000)
         })
       }
   }
@@ -71,6 +88,13 @@ const App = () => {
           const contactsAfterDelete = persons.filter((person) => person.id !== id)
           setPersons(contactsAfterDelete)
           console.log("Contact deleted", personToDelete)
+          setMessage(`${personToDelete.name} deleted from server successfully.`)
+        })
+        .catch( error => {
+          setErrorMessage(`${personToDelete.name} is already deleted from the server.`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 4000)
         })
     }
   }
@@ -93,6 +117,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification className="message" message={message}/>
+      <Notification className="error-message" message={errorMessage}/>
       <Filter onChange={handleFilterChange}/>
 
       <h3>Add a new contact:</h3>
