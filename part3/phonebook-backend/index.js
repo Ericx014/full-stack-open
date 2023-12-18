@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
     { 
       "id": 1,
@@ -55,13 +57,45 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
-// COMPLETED 3.4
-// RESUME AT 3.5
-// const generatId = () => {
-//     const id = Math.floor(Math.random * 100)
+const generateId = () => {
+    const id = Math.floor(Math.random() * 1000)
+    return id
+}
 
-//     return id
-// }
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    
+    if(!body.number) {
+        return response.status(400).json({
+            error: 'Number is missing'
+        })
+    }
+
+    if(!body.name) {
+        return response.status(400).json({
+            error: "Name is missing"
+        })
+    }
+
+    const existingName = persons.find((person) => {
+        return (body.name).toLowerCase() === (person.name).toLowerCase()
+    })    
+
+    if(existingName){
+        return response.status(400).json({
+            error: "Contact is already saved"
+        })
+    }
+
+    const person = {
+        id: generateId(),
+        name: body.name,
+        number: body.number
+    }
+
+    persons = persons.concat(person)
+    response.json(person)
+})
 
 const PORT = 3001
 app.listen(PORT, () => {
