@@ -1,0 +1,8 @@
+PUT http://localhost:3001/api/persons/6585096616ee92ae267f91d8
+Content-Type: application/json
+
+{
+    "name": "Eric Bong",
+    "number": "011-33472199",
+    "id": "658a43818e54859a7e72b753"
+}

@@ -47,10 +47,15 @@ app.get('/api/persons/:id', (request, response, next) => {
 app.get('/api/info', (request, response) => {
     const date = new Date()
 
-    response.send(`
-        <p>Phonebook has info for ${Person.length} people</p>
-        <p>${date}</p>
-    `)    
+    Person.countDocuments({})
+        .then(count => { response.send(`
+            <p>Phonebook has info for ${count} people</p>
+            <p>${date}</p>
+        `)})
+        .catch(error => {
+            console.log(error)
+            response.status(500).end()
+        })
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -81,16 +86,6 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
-    // const existingName = Person.find((person) => {
-    //     return (body.name).toLowerCase() === (person.name).toLowerCase()
-    // })    
-
-    // if(existingName){
-    //     return response.status(400).json({
-    //         error: "Contact is already saved"
-    //     })
-    // }
-
     const person = new Person ({
         id: generateId(),
         name: body.name,
@@ -101,6 +96,17 @@ app.post('/api/persons', (request, response) => {
         response.json(savedPerson)
         console.log("Person added", savedPerson)
     })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const {name, number} = request.body
+
+    Person.findByIdAndUpdate(
+        request.params.id, 
+        {name, number}, 
+        {new: true, runValidators: true, context: "query"})
+    .then((updatedPerson) => response.json(updatedPerson))
+    .catch((error) => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
