@@ -126,7 +126,7 @@ const App = () => {
 				persons = {persons.filter((person) => 
 					person.name.toLowerCase().includes((filter).toLowerCase())
 				)}
-				deleteOnClick = {deleteOnClick}
+				deletePerson = {deleteOnClick}
 			/>
 		</div>
 	);
