@@ -9,11 +9,11 @@ beforeEach(async () => {
 	await Blog.deleteMany({})
 	console.log("cleared")
 
-	helper.initialBlogs.forEach(async (blog) => {
+	for (let blog of helper.initialBlogs) {
 		let blogObject = new Blog(blog)
 		await blogObject.save()
 		console.log("saved")
-	})
+	}
 	console.log("completed")
 })
 
@@ -74,6 +74,40 @@ test('if blogs URL is missing, it cannot be added', async () => {
 
 	const blogsAtEnd = await helper.blogsInDb()
 	expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
+test('testing if a blog can be deleted', async () => {
+	const initialBlogs = await helper.blogsInDb()
+	const blogToDelete = initialBlogs[0]
+
+	await api
+		.delete(`/api/blogs/${blogToDelete.id}`)
+		.expect(204)
+
+	const blogsAtEnd = await helper.blogsInDb()
+	expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+	const titles = blogsAtEnd.map(r => r.title)
+	expect(titles).not.toContain(blogToDelete.title)
+})
+
+test('testing if a blog can be updated', async () => {
+	const initialBlogs = await helper.blogsInDb()
+	const blogToUpdate = initialBlogs[0]
+	const blogToReplace = await helper.blogToReplace
+
+	await api
+		.put(`/api/blogs/${blogToUpdate.id}`)
+		.send(blogToReplace)
+		.expect(200)
+
+	const blogsAtEnd = await helper.blogsInDb()
+	const updatedBlog = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+
+	expect(updatedBlog.title).toBe(blogToReplace.title)
+	expect(updatedBlog.author).toBe(blogToReplace.author)
+	expect(updatedBlog.url).toBe(blogToReplace.url)
+	expect(updatedBlog.likes).toBe(blogToReplace.likes)
 })
 
 afterAll(async () => {

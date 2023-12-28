@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/658bf2ff59a183899f69f19a
+Content-Type: application/json
+
+{
+  "title": "Harry Putter",
+  "author": "J. K. Rowing",
+  "url": "example url",
+  "likes": 5
+}

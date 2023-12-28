@@ -40,6 +40,13 @@ const blogWithoutUrl = {
 	likes: 5
 }
 
+const blogToReplace = {
+	title: "Kengan Ashura",
+	author: "I also DK",
+	url: "https://www.kenganashura.com",
+	likes: 6
+}
+
 const blogsInDb = async () => {
 	const blogs = await Blog.find({})
 	return blogs.map((blog) => blog.toJSON())
@@ -51,5 +58,6 @@ module.exports = {
 	blogWithoutTitle,
 	blogWithoutUrl,
 	blogWithoutLikes,
+	blogToReplace,
 	blogsInDb
 }
