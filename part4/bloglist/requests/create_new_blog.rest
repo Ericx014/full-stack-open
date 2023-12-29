@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-	"title": "My Hiro Academia",
-	"author": "Kohei Horikoshee",
-	"url": "example url",
-	"likes": "2500"
+	"title": "Aguaman",
+	"author": "Jack Snaider",
+	"url": "https://aguaman.com",
+	"likes": "15",
+	"userId": "658e6ccc05a320191d75b493"
 }
