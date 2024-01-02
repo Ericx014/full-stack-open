@@ -1,14 +1,14 @@
 POST http://localhost:3003/api/users
 Content-Type: application/json
 
-# {
-#     "username": "CosmicMuffin",
-#     "name": "Eric Bong",
-#     "password": "hellohello123"
-# }
-
 {
-    "username": "root",
-    "name": "Superuser",
-    "password": "randompassword"
+    "username": "CosmicMuffin",
+    "name": "Eric Bong",
+    "password": "hellohello123"
 }
+
+# {
+#     "username": "root",
+#     "name": "Superuser",
+#     "password": "randompassword"
+# }
